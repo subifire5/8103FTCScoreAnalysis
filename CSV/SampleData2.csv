@@ -1,0 +1,13 @@
+competition,match,team,color,landed,sampled,claimed,parked,lander,depot,other,hanging,partincrater,fullyincrater,disconnected,goldside
+BRATTAIN2,1,417,Blue,1,2,0,1,0,3,1,0,0,0,0,0
+BRATTAIN2,1,14760,Blue,0,0,0,0,20,5,0,0,1,0,0,1
+BRATTAIN2,1,12878,Red,1,0,1,0,6,8,0,0,0,0,0,1
+BRATTAIN2,1,8923,Red,1,0,0,0,0,2,0,1,0,0,1,0
+BRATTAIN2,2,8923,Blue,1,1,1,0,0,4,0,1,0,0,0,0
+BRATTAIN2,2,8103,Blue,1,0,1,1,4,0,1,0,0,0,0,1
+BRATTAIN2,2,9884,Red,1,0,0,0,8,3,0,0,0,0,0,0
+BRATTAIN2,2,14760,Red,1,0,1,1,0,16,0,1,0,0,1,1
+BRATTAIN2,3,417,Blue,0,0,0,1,22,2,0,0,1,0,0,1
+BRATTAIN2,3,14370,Blue,0,2,1,0,20,12,0,0,1,0,0,0
+BRATTAIN2,3,12878,Red,0,0,0,0,10,12,0,1,0,0,0,0
+BRATTAIN2,3,14760,Red,0,0,1,1,9,11,0,0,1,0,0,1
