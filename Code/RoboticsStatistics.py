@@ -136,6 +136,7 @@ def full_average(teams, team_scores, auto_scores, teleop_scores, endgame_scores)
             teams[teamn]['SlEndgame Avg.'] = st.mean(endgame_scores['Sl' + teamn])
 
 
+
 def full_medstd(teams, team_scores, auto_scores, teleop_scores, endgame_scores):
     for teamn in teams:
         # median + and - standard deviation for team scores
@@ -325,6 +326,7 @@ def full_medstd(teams, team_scores, auto_scores, teleop_scores, endgame_scores):
                         'SlEndgame StdDev.']
                     teams[teamn]['SlEndgameMed-Std.'] = teams[teamn]['SlEndgame Median'] - teams[teamn][
                         'SlEndgame StdDev.']
+
 
 
 def average(teams, team_scores, auto_scores):
@@ -544,6 +546,7 @@ def dqs(teams):
             print('Scout Sheet Missing ' + teamn)
 
 '''
+
 excel hyperlink formatting:
 Each hyperlink will fit into a cell
 =HYPERLINK("C:/bill/bob.txt", "bob")
@@ -573,6 +576,16 @@ so:
 r = '=HYPERLINK("C:/bill/bob.txt", "bob")
 r will now make the cell say bob and link to bob.txt
 
+
+Alternatively: How to use .format
+
+.format() is a function you can add to the end of a string to pass in non-string variables
+
+for example:
+r = '=HYPERLINK("{}", "{}").format(cwd, file)
+or 
+r= 'HYPERLINK("{x}", "{y}").format(x=cwd, y=file)
+
 '''
 
 
@@ -584,11 +597,14 @@ def pics(teams, ploc):  # turns a teams pictures into an excel hyperlinks
     for teamn in teams:
         temp_num = teams[teamn]['Team #']
         pic_path = cwd+ploc+temp_num+exten
+
+        #  pic_path = os.path.join(cwd, ploc, temp_num+exten)
         print(temp_num)
         print(pic_path)
         if os.path.isfile(pic_path):
             print('file found')
-            x = '=HYPERLINK("' + pic_path + '","' + temp_num + ' ")'
+            #  x = '=HYPERLINK("' + pic_path + '","' + temp_num + ' ")'
+            x= '=HYPERLINK("{}", "{}")'.format(pic_path, temp_num)
             teams[teamn]['Picture'] = x
         else:
             teams[teamn]['Picture'] = 'NA'
