@@ -1,0 +1,69 @@
+Match,Team1,Team2,Unhooks,"Samples (2,1,0)",Claim depot,Parking1,Minerals in Depot,Minerals in Lander,Parking2,Disconnects1?,Disconnects2?,Auto Score,Teleop Score,Endgame Score,,Calculations,Auto1,Teleop1,Endgame1,Total1,Auto2,Teleop2,Endgame2,Total2,Competition,Color
+1,12069,11664,X,1,X,X,2,,F,,,70,10,75,,Team 1 score:,80,4,0,84,-10,6,75,71,Interleagues,Red
+1,13502,12598,X,1,,,0,2,H,,,120,12,100,,Team 1 score:,55,10,50,115,65,2,50,117,Interleagues,Blue
+2,11138,14760,X,2,X,X,,14,H,,,105,67,50,,Team 1 score:,105,70,50,225,0,-3,0,-3,Interleagues,Red
+2,7977,10424,X,1,X,X,8,0,H,,,80,16,65,,Team 1 score:,80,16,50,146,0,0,15,15,Interleagues,Blue
+3,13211,417,X,0,X,,0,5,H,,,85,42,50,,Team 1 score:,45,25,50,120,40,17,0,57,Interleagues,Red
+3,8103,12557,X,2,X,X,1,15,H,,,135,85,100,,Team 1 score:,105,77,50,232,30,8,50,88,Interleagues,Blue
+4,13354,12583,X,,X,X,2,0,H,,,,,,231,Team 1 score:,55,4,50,109,-55,-4,-50,122,Interleagues,Red
+4,10285,9884,X,0,,,7,0,,,,30,14,0,,Team 1 score:,45,14,0,59,-15,0,0,-15,Interleagues,Blue
+5,14246,14724,X,0,,,,,,1,,75,16,50,,Team 1 score:,30,0,0,30,45,16,50,111,Interleagues,Red
+5,15203,6188,X,,,,,,H,1,1,60,0,50,,Team 1 score:,30,0,50,80,30,0,0,30,Interleagues,Blue
+6,14433,8923,TO BE REPLAYED,,,,,,H,,,160,74,100,,Team 1 score:,30,0,50,80,130,74,50,254,Interleagues,Red
+6,6220,6163,AFTER LUNCH,,,,4,,H,,,135,23,65,,Team 1 score:,30,8,50,88,105,15,15,135,Interleagues,Blue
+7,7330,15228,X,0,,,0,6,H,1,,30,36,50,40 Penalty,Team 1 score:,30,30,50,110,0,6,0,6,Interleagues,Red
+7,11104,12069,X,1,X,X,5,,H,,,90,16,75,,Team 1 score:,80,10,50,140,10,6,25,41,Interleagues,Blue
+8,12557,10285,X,1,,X,0,0,H,,,95,12,75,,Team 1 score:,65,0,50,115,30,12,25,67,Interleagues,Red
+8,11664,10424,X,1,,X,1,,H,,,80,8,65,,Team 1 score:,65,2,50,117,15,6,15,36,Interleagues,Blue
+9,6220,13502,X,1,X,X,0,6,,,,120,37,50,,Team 1 score:,80,30,0,110,40,7,50,97,Interleagues,Red
+9,14760,8103,X,,,,3,,,,,95,60,50,40 Penalty,Team 1 score:,30,6,0,36,65,54,50,169,Interleagues,Blue
+10,8923,7977,X,1,X,,,11,,,1,85,88,65,,Team 1 score:,70,55,0,125,15,33,65,113,Interleagues,Red
+10,14246,13354,X,,,,5,,P,,,110,16,65,,Team 1 score:,30,10,15,55,80,6,50,136,Interleagues,Blue
+11,14724,6163,X,1,,X,1,,,1,,,,,131,Team 1 score:,65,2,0,67,-65,-2,0,64,Interleagues,Red
+11,12598,12583,X,1,X,X,4,,H,,,,,,213,Team 1 score:,80,8,50,138,-50,0,15,75,Interleagues,Blue
+12,14433,11138,X,1,X,X,0,7,H,,,120,85,100,,Team 1 score:,80,35,50,165,40,50,50,140,Interleagues,Red
+12,15203,15228,X,,,,1,,H,,,30,8,65,,Team 1 score:,30,2,50,82,0,6,15,21,Interleagues,Blue
+13,7330,6188,X,1,X,X,0,6,H,,1,80,41,65,,Team 1 score:,80,30,50,160,0,11,15,26,Interleagues,Red
+13,9884,417,X,1,,,3,,,1,,85,31,50,,Team 1 score:,55,6,0,61,30,25,50,105,Interleagues,Blue
+14,10285,11104,X,0,,X,2,,H,,,120,20,50,,Team 1 score:,40,4,50,94,80,16,0,96,Interleagues,Red
+14,7977,13211,,,,X,2,,H,,,105,19,100,,Team 1 score:,10,4,50,64,95,15,50,160,Interleagues,Blue
+15,15203,13502,X,0,,,,,,1,,135,10,0,,Team 1 score:,30,0,0,30,105,10,0,115,Interleagues,Red
+15,8923,12583,X,1,X,X,,13,H,,,135,79,100,40 Penalty,Team 1 score:,80,65,50,195,55,14,50,119,Interleagues,Blue
+16,9884,12069,X,0,,X,0,,,,,55,10,0,,Team 1 score:,40,0,0,40,15,10,0,25,Interleagues,Red
+16,6163,10424,X,1,X,X,1,,P,1,,105,10,30,,Team 1 score:,80,2,15,97,25,8,15,48,Interleagues,Blue
+17,14433,14246,X,1,X,X,0,6,H,,,120,36,65,,Team 1 score:,80,30,50,160,40,6,15,61,Interleagues,Red
+17,11104,14760,X,1,X,X,4,,H,,1,110,10,50,,Team 1 score:,80,8,50,138,30,2,0,32,Interleagues,Blue
+18,11138,12598,X,0,,X,0,10,,,,135,83,50,,Team 1 score:,40,50,0,90,95,33,50,178,Interleagues,Red
+18,7330,8103,X,,,,,,,1,1,110,2,,,Team 1 score:,30,0,0,30,80,2,0,82,Interleagues,Blue
+19,13354,6188,X,0,,,4,0,P,,1,30,12,15,,Team 1 score:,30,8,15,53,0,4,0,4,Interleagues,Red
+19,15228,12557,,,,,,,,1,,40,8,50,,Team 1 score:,0,0,0,0,40,8,50,98,Interleagues,Blue
+20,11664,6220,X,0,,X,,,P,1,,95,29,65,,Team 1 score:,40,0,15,55,55,29,50,134,Interleagues,Red
+20,13211,14724,,0,,,0,0,,1,,40,16,,,Team 1 score:,0,0,0,0,40,16,0,56,Interleagues,Blue
+21,12069,417,X,0,,X,3,0,P,,,45,22,65,,Team 1 score:,40,6,15,61,5,16,50,71,Interleagues,Red
+21,11138,12583,X,,X,X,,14,H,,,105,82,100,,Team 1 score:,55,70,50,175,50,12,50,112,Interleagues,Blue
+22,8103,6163,X,2,X,X,0,18,H,,,135,106,50,,Team 1 score:,105,90,50,245,30,16,0,46,Interleagues,Red
+22,10285,6188,X,1,X,X,7,,,1,1,80,14,15,,Team 1 score:,80,14,0,94,0,0,15,15,Interleagues,Blue
+23,12557,7977,X,1,,X,5,,H,,,120,12,50,,Team 1 score:,65,10,50,125,55,2,0,57,Interleagues,Red
+23,14433,14724,X,1,X,X,1,7,H,,,145,50,100,,Team 1 score:,80,37,50,167,65,13,50,128,Interleagues,Blue
+24,10424,11104,,0,,,,,,,,,,,144,Team 1 score:,0,0,0,0,0,0,0,0,Interleagues,Red
+24,12598,8923,X,,,,2,,H,,1,,,,289,Team 1 score:,30,4,50,84,-30,-4,-50,-84,Interleagues,Blue
+25,7330,13502,,0,,,,,,1,,80,17,50,,Team 1 score:,0,0,0,0,80,17,50,147,Interleagues,Red
+25,13354,13211,X,-1,,X,5,,H,,,95,30,100,,Team 1 score:,15,10,50,75,80,20,50,150,Interleagues,Blue
+26,6220,15228,X,0,X,X,0,4,H,,,80,32,65,,Team 1 score:,55,20,50,125,25,12,15,52,Interleagues,Red
+26,417,14246,X,1,,X,,5,H,,1,65,34,65,,Team 1 score:,65,25,50,140,0,9,15,24,Interleagues,Blue
+27,9884,15203,X,1,,X,0,0,,,,65,4,50,,Team 1 score:,65,0,0,65,0,4,50,54,Interleagues,Red
+27,14760,11664,X,,,,6,,P,,,70,12,40,,Team 1 score:,30,12,15,57,40,0,25,65,Interleagues,Blue
+28,12583,13211,X,1,X,X,0,3,P,,,160,29,30,,Team 1 score:,80,15,15,110,80,14,15,109,Interleagues,Red
+28,6188,14433,,,,,2,,H,,,65,41,100,,Team 1 score:,0,4,50,54,65,37,50,152,Interleagues,Blue
+29,8103,12069,X,2,X,X,0,17,H,,,105,89,75,,Team 1 score:,105,85,50,240,0,4,25,29,Interleagues,Red
+29,14724,13354,X,1,X,X?,2,2,H,,,145,14,65,,Team 1 score:,80,14,50,144,65,0,15,80,Interleagues,Blue
+30,9884,12557,X,0,,,,,,2,1,80,2,15,,Team 1 score:,30,0,0,30,50,2,15,67,Interleagues,Red
+30,13502,11104,X,1,,,,2,H,,,85,20,100,,Team 1 score:,0,20,50,70,0,10,50,60,Interleagues,Blue
+31,12598,417,,0,,,4,0,H,,,40,16,100,,Team 1 score:,0,8,50,58,40,8,50,98,Interleagues,Red
+31,7977,15203,X,,,,3,,H,1,,70,6,100,,Team 1 score:,30,6,50,86,40,0,50,90,Interleagues,Blue
+32,14246,6163,X,,,,2,0,,,,40,10,0,,Team 1 score:,30,4,0,34,10,6,0,16,Interleagues,Red
+32,11138,11664,X,1,X,X,,11,H,,,80,71,50,,Team 1 score:,80,55,50,185,0,16,0,16,Interleagues,Blue
+33,14760,15228,X,0,,X,4,,F,,,40,8,25,,Team 1 score:,40,8,0,48,0,0,25,25,Interleagues,Red
+33,8923,10285,X,1,X,X,,13,H,,,145,30,100,,Team 1 score:,80,65,50,195,65,-35,50,80,Interleagues,Blue
+34,10424,15203,X,0,,,3,0,,,,40,10,65,,Team 1 score:,30,6,0,36,10,4,65,79,Interleagues,Red
+34,6220,7330,X,0,X,X,,6,H,,1,110,30,100,,Team 1 score:,55,30,50,135,55,0,50,105,Interleagues,Blue
