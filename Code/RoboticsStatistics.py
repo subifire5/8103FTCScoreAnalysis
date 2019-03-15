@@ -384,7 +384,7 @@ def main():
     pit = 'CSV/Pit_Scouting.csv'  # pit scout csv
     pic_cwd = '/TeamPics/'  # the location of the teams pictures
 
-    metric = 'CCWM'
+    metric = 'OPR'
 
     years = ['2018', '2017', '2016', '2015', '2014', '2013', '2012', '2011', '2010', '2009']
     default_d = {'Team #': 0,   # A Default team, updated with keys, used as the
