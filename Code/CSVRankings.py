@@ -3,6 +3,7 @@ import csv
 import collections as cl
 import pandas
 import bs4
+import numpy as np
 
 # Autonomous Period
 
@@ -25,19 +26,23 @@ part_in_craterv = 15
 fully_in_craterv = 25
 
 
-def csv_sheet(refcsv, cwd, csv_location, allteam):
+def csv_sheet(refcsv, cwd, csv_location):
 
-    matches = allteam[0]
-    teams = allteam[1]
-    team_scores = allteam[2]
-    auto_scores = allteam[3]
-    teleop_scores = allteam[4]
-    endgame_scores = allteam[5]
+    total_scores = []  # the scores for each match
+    auto_scores = []  # auto scores for each match
+    teleop_scores = []  # teleop scores for each match
+    endgame_scores = []  # endgame scores for each match
+    raw_matches = dict()  # A dictionary of lists representing teams in a match
+    matches = []  # a lists of lists, each representing a color in a match
+    teams = dict()  # A dict of dicts that will hold the processed data of all teams
+    opponent_score = []  # a list of lists, each representing the scores against a team in a match
+    team_scores = dict()  # a dict of lists of lists team scores
+    full_csv = []
     # Changes the directory to The Excel Folder
     os.chdir(cwd)
     os.chdir('..')
     cwd = os.getcwd()
-
+    match_num = 0
     print(cwd)
     print(csv_location)
     csv_location = cwd + csv_location
@@ -49,224 +54,217 @@ def csv_sheet(refcsv, cwd, csv_location, allteam):
 
         # The code will skip the first row with real data
         count=0
+        team_nums = []
         for row in result_sheet:
             # if row_count > 0:
             count+=1
             print(count)
+
+            '''
+            A brief explanation
+            
+            each of the score lists is a list that has the scores of an alliance
+            it is updated for each side of a match
+            the red team's score is put in first, then the blue teams
+            this is important for later
+            
+            the total_scores is the total score for an alliance
+            that includes penalties
+            
+            The next part of the code accesses a dictionary of lists
+            called "matches"
+            the key to each list is a team's name
+            Each list has the presence of a team on each alliance in a match
+            red first then blue
+            0 for not present, 1 for present
+            so if a team was on the red alliance in a match and not present in another
+            their list would look like:
+            1
+            0
+            0
+            0
+            
+            the program automatically adds two 0's to each team on record
+            unless they play in that match
+            
+            if a team isn't on record the program will calculate how many 0's need to be added
+            '''
+
+
             row_dict = dict(row)
-            temp_scores1 = [int(row_dict['Total1']), int(row_dict['Auto1']),
-                            int(row_dict['Teleop1']), int(row_dict['Endgame1'])]
-            temp_scores2 = [int(row_dict['Total2']), int(row_dict['Auto2']),
-                            int(row_dict['Teleop2']), int(row_dict['Endgame2'])]
-            temp_score1 = int(row_dict['Total1'])
-            temp_score2 = int(row_dict['Total2'])
-            temp_teamn1 = row_dict['Team1']  # holds the number of the first team of an alliance being iterated
-            temp_teamn2 = row_dict['Team2']  # holds the team # of team 2 in an alliance
-            if 'ï»¿competition' in row_dict:
-                temp_comp = 'ï»¿competition'
+            full_csv.append(row_dict)
+            auto_scores.append(int(row_dict['Red auto']))
+            auto_scores.append(int(row_dict['Blue auto']))
+            teleop_scores.append(int(row_dict['Red teleop']))
+            teleop_scores.append(int(row_dict['Blue teleop']))
+            endgame_scores.append(int(row_dict['Red endgame']))
+            endgame_scores.append(int(row_dict['Blue endgame']))
+            scores = tally(row_dict)
+            total_scores.append(scores[0])
+            total_scores.append(scores[1])
+            if row_dict['Red team 1'] in team_scores:
+                team_scores[row_dict['Red team 1']]['Auto'].append(int(row_dict['Red auto']))
+                team_scores[row_dict['Red team 1']]['Teleop'].append(int(row_dict['Red teleop']))
+                team_scores[row_dict['Red team 1']]['Endgame'].append(int(row_dict['Red endgame']))
+                team_scores[row_dict['Red team 1']]['Total'].append(scores[0])
             else:
-                temp_comp = 'Competition'
-            temp_match = str(row_dict[temp_comp]) + str(row_dict['Match'])  # the competition plus the match number
-            print(temp_match)
-            print("printed once")
-            temp_color = row_dict['Color']
-            if temp_match in matches: # Checks to see if a match exists
-                # updates the matches
-                if temp_color == 'Blue':
-                    matches[temp_match]['Blue'][temp_teamn1 + '1'] = True
-                    matches[temp_match]['Blue'][temp_teamn2 + '1'] = True
-                    if matches[temp_match]['Stats']['Filed'] == 2:
-                        # checks if this is the last of a match
-                        matches[temp_match]['Blue'][temp_teamn1] = int(row_dict['Total1'])
-                        matches[temp_match]['Blue'][temp_teamn2] = int(row_dict['Total2'])
-                        matches[temp_match]['Blue']['Total'] = int(row_dict['Total1']) + int(row_dict['Total2'])
-                        matches[temp_match]['Stats']['Filed'] += 2
-                        if matches[temp_match]['Blue']['Total'] > matches[temp_match]['Red']['Total']:
-                            matches[temp_match]['Stats']['Win'] = 'Blue'
-                            matches[temp_match]['Stats']['Margin'] = matches[temp_match]['Blue']['Total'] - \
-                                matches[temp_match]['Red']['Total']
-
-                        elif matches[temp_match]['Blue']['Total'] == matches[temp_match]['Red']['Total']:
-                            matches[temp_match]['Stats']['Win'] = 'Tie'
-                            matches[temp_match]['Stats']['Margin'] = 0
-                        else:
-                            matches[temp_match]['Stats']['Win'] = 'Red'
-                            print(matches[temp_match]['Red']['Total'])
-                            matches[temp_match]['Stats']['Margin'] = matches[temp_match]['Red']['Total'] -\
-                                matches[temp_match]['Blue']['Total']
-
-                    else:
-                        matches[temp_match]['Blue'][temp_teamn1] = int(row_dict['Total1'])
-                        matches[temp_match]['Blue'][temp_teamn2] = int(row_dict['Total2'])
-                        matches[temp_match]['Blue']['Total'] = int(row_dict['Total1']) + int(row_dict['Total2'])
-                        matches[temp_match]['Stats']['Filed'] += 1
-                    matches[temp_match]['Blue']['Scores'].append(temp_score1)
-                    matches[temp_match]['Blue']['Scores'].append(temp_score2)
-
-                else:
-                    matches[temp_match]['Red'][temp_teamn1 + '1'] = True
-                    matches[temmp_match]['Red'][temp_teamn2 + '1'] = True
-                    if matches[temp_match]['Stats']['Filed'] == 2:
-                        # checks if this is the last of a match
-                        matches[temp_match]['Red'][temp_teamn1] = int(row_dict['Total1'])
-                        matches[temp_match]['Red'][temp_teamn2] = int(row_dict['Total2'])
-                        matches[temp_match]['Red']['Total'] = int(row_dict['Total1']) + int(row_dict['Total2'])
-                        matches[temp_match]['Stats']['Filed'] += 2
-                        if matches[temp_match]['Blue']['Total'] > matches[temp_match]['Red']['Total']:
-                            matches[temp_match]['Stats']['Win'] = 'Blue'
-                            matches[temp_match]['Stats']['Margin'] = matches[temp_match]['Blue']['Total'] - \
-                                                                     matches[temp_match]['Red']['Total']
-
-                        elif matches[temp_match]['Blue']['Total'] == matches[temp_match]['Red']['Total']:
-                            matches[temp_match]['Stats']['Win'] = 'Tie'
-                            matches[temp_match]['Stats']['Margin'] = 0
-                        else:
-                            matches[temp_match]['Stats']['Win'] = 'Red'
-                            matches[temp_match]['Stats']['Margin'] = matches[temp_match]['Red']['Total'] - \
-                                                                     matches[temp_match]['Blue']['Total']
-                    else:
-                        matches[temp_match]['Red'][temp_teamn1] = int(row_dict['Total1'])
-                        matches[temp_match]['Red'][temp_teamn2] = int(row_dict['Total2'])
-                        matches[temp_match]['Red']['Total'] = int(row_dict['Total1']) + int(row_dict['Total2'])
-                        matches[temp_match]['Stats']['Filed'] += 1
-                    matches[temp_match]['Red']['Scores'].append(temp_score1)
-                    matches[temp_match]['Red']['Scores'].append(temp_score2)
-
+                team_scores[row_dict['Red team 1']] = dict()
+                team_scores[row_dict['Red team 1']]['Auto'] = [int(row_dict['Red auto'])]
+                team_scores[row_dict['Red team 1']]['Teleop'] = [int(row_dict['Red teleop'])]
+                team_scores[row_dict['Red team 1']]['Endgame'] = [int(row_dict['Red endgame'])]
+                team_scores[row_dict['Red team 1']]['Total'] = [scores[0]]
+            if row_dict['Red team 2'] in team_scores:
+                team_scores[row_dict['Red team 2']]['Auto'].append(int(row_dict['Red auto']))
+                team_scores[row_dict['Red team 2']]['Teleop'].append(int(row_dict['Red teleop']))
+                team_scores[row_dict['Red team 2']]['Endgame'].append(int(row_dict['Red endgame']))
+                team_scores[row_dict['Red team 2']]['Total'].append(scores[0])
             else:
-                if temp_color == 'Blue':
-                    matches[temp_match] = {
-                        'Blue': {temp_teamn1: int(row_dict['Total1']), temp_teamn2: int(row_dict['Total2']),
-                                 'Total': int(row_dict['Total1']) + int(row_dict['Total2']), 'Scores': [temp_score1, temp_score2], temp_teamn1 +'1': True,
-                                 temp_teamn2+'1': True},
-                        'Stats': {'Filed': 2},
-                        'Red': {'Total': 0, 'Scores': []}
-                    }
-                else:
-                    matches[temp_match] = {
-                        'Red': {temp_teamn1: int(row_dict['Total1']), temp_teamn2: int(row_dict['Total2']),
-                                'Total': int(row_dict['Total1']) + int(row_dict['Total2']), 'Scores': [temp_score1, temp_score2],
-                                temp_teamn1 + '1': True,
-                                temp_teamn2 + '1': True},
-                        'Stats': {'Filed': 2},
-                        'Blue': {'Total': 0, 'Scores': []}
-                    }
-
-            if temp_teamn1 in teams:  # Checks to see if a team exists
-                # edits a current team
-                # updates scores and best/worst
-
-                x= list()
-                # CHANGE GOLD AND SIDE AS NEEDED
-                # THIS IS THE FIRST PLACE WHERE PLACEHOLDERS HAVE BEEN PLACED
-                # ASSUMES SILVER IF SIDE ISN'T 'gold'
-                '''
-                if row_dict['side'] == 'gold':
-                    team_scores['Gl' + temp_teamn].append(temp_scores[0])
-                    auto_scores['Gl' + temp_teamn].append(temp_scores[1])
-                    teleop_scores['Gl' + temp_teamn].append(temp_scores[2])
-                    endgame_scores['Gl' + temp_teamn].append(temp_scores[3])
-                else:
-                    team_scores['Sl' + temp_teamn].append(temp_scores[0])
-                    auto_scores['Sl' + temp_teamn].append(temp_scores[1])
-                    teleop_scores['Sl' + temp_teamn].append(temp_scores[2])
-                    endgame_scores['Sl' + temp_teamn].append(temp_scores[3])
-                '''
-                team_scores[temp_teamn1].append(temp_scores1[0])
-                auto_scores[temp_teamn1].append(temp_scores1[1])
-                teleop_scores[temp_teamn1].append(temp_scores1[2])
-                endgame_scores[temp_teamn1].append(temp_scores1[3])
-                x = team_scores[temp_teamn1]
-
-                teams[temp_teamn1]['Best Score'] = max(x)
-                teams[temp_teamn1]['Worst Score'] = min(x)
-                teams[temp_teamn1]['NumOfScores'] += 1
-                if 'Name' not in teams[temp_teamn1] and 'name' in row_dict:
-                    teams[temp_teamn1]['Name'] = row['name']
-                if row_dict['Disconnects1?'] == '1':
-                    teams[temp_teamn1]['Disconnects'] += 1
-
-                # repeats for team 2
-
-                team_scores[temp_teamn2].append(temp_scores2[0])
-                auto_scores[temp_teamn2].append(temp_scores2[1])
-                teleop_scores[temp_teamn2].append(temp_scores2[2])
-                endgame_scores[temp_teamn2].append(temp_scores2[3])
-                x = team_scores[temp_teamn2]
-
-                teams[temp_teamn2]['Best Score'] = max(x)
-                teams[temp_teamn2]['Worst Score'] = min(x)
-                teams[temp_teamn2]['NumOfScores'] += 1
-
-                if row_dict['Disconnects2?'] == '1':
-                    teams[temp_teamn2]['Disconnects'] += 1
-
-            # makes a new team
+                team_scores[row_dict['Red team 2']] = dict()
+                team_scores[row_dict['Red team 2']]['Auto'] = [int(row_dict['Red auto'])]
+                team_scores[row_dict['Red team 2']]['Teleop'] = [int(row_dict['Red teleop'])]
+                team_scores[row_dict['Red team 2']]['Endgame'] = [int(row_dict['Red endgame'])]
+                team_scores[row_dict['Red team 2']]['Total'] = [scores[0]]
+            if row_dict['Blue team 1'] in team_scores:
+                team_scores[row_dict['Blue team 1']]['Auto'].append(int(row_dict['Blue auto']))
+                team_scores[row_dict['Blue team 1']]['Teleop'].append(int(row_dict['Blue teleop']))
+                team_scores[row_dict['Blue team 1']]['Endgame'].append(int(row_dict['Blue endgame']))
+                team_scores[row_dict['Blue team 1']]['Total'].append(scores[0])
             else:
-                # THIS IS THE SECOND POINT WHERE GOLD AND SIDE MAY VARY!!
-                '''
-                team_scores['Gl' + temp_teamn] = []
-                auto_scores['Gl' + temp_teamn] = []
-                teleop_scores['Gl' + temp_teamn] = []
-                endgame_scores['Gl' + temp_teamn] = []
-                team_scores['Sl' + temp_teamn] = []
-                auto_scores['Sl' + temp_teamn] = []
-                teleop_scores['Sl' + temp_teamn] = []
-                endgame_scores['Sl' + temp_teamn] = []
+                team_scores[row_dict['Blue team 1']] = dict()
+                team_scores[row_dict['Blue team 1']]['Auto'] = [int(row_dict['Blue auto'])]
+                team_scores[row_dict['Blue team 1']]['Teleop'] = [int(row_dict['Blue teleop'])]
+                team_scores[row_dict['Blue team 1']]['Endgame'] = [int(row_dict['Blue endgame'])]
+                team_scores[row_dict['Blue team 1']]['Total'] = [scores[1]]
+            if row_dict['Blue team 2'] in team_scores:
+                team_scores[row_dict['Blue team 2']]['Auto'].append(int(row_dict['Blue auto']))
+                team_scores[row_dict['Blue team 2']]['Teleop'].append(int(row_dict['Blue teleop']))
+                team_scores[row_dict['Blue team 2']]['Endgame'].append(int(row_dict['Blue endgame']))
+                team_scores[row_dict['Blue team 2']]['Total'].append(scores[0])
+            else:
+                team_scores[row_dict['Blue team 2']] = dict()
+                team_scores[row_dict['Blue team 2']]['Auto'] = [int(row_dict['Blue auto'])]
+                team_scores[row_dict['Blue team 2']]['Teleop'] = [int(row_dict['Blue teleop'])]
+                team_scores[row_dict['Blue team 2']]['Endgame'] = [int(row_dict['Blue endgame'])]
+                team_scores[row_dict['Blue team 2']]['Total'] = [scores[1]]
+            match_num += 2  # adds 2 each time because each match has a red and blue side
+            # adding 0's and 1's
+            '''
+                        label which matches a team was in and which color
+                        do this for the whole data set
+                        then generate 1's and 0's accordingly
+                        '''
 
-                if row_dict['side'] == 'gold':
-                    team_scores['Gl' + temp_teamn].append(temp_scores[0])
-                    auto_scores['Gl' + temp_teamn].append(temp_scores[1])
-                    teleop_scores['Gl' + temp_teamn].append(temp_scores[2])
-                    endgame_scores['Gl' + temp_teamn].append(temp_scores[3])
-                else:
-                    team_scores['Sl' + temp_teamn].append(temp_scores[0])
-                    auto_scores['Sl' + temp_teamn].append(temp_scores[1])
-                    teleop_scores['Sl' + temp_teamn].append(temp_scores[2])
-                    endgame_scores['Sl' + temp_teamn].append(temp_scores[3])
-                '''
-                team_scores[temp_teamn1] = [temp_scores1[0]]
-                auto_scores[temp_teamn1] = [temp_scores1[1]]
-                teleop_scores[temp_teamn1] = [temp_scores1[2]]
-                endgame_scores[temp_teamn1] = [temp_scores1[3]]
+            if row_dict['Red team 1'] in raw_matches:
+                raw_matches[row_dict['Red team 1']].append('R'+str(row_dict['Match code']))
+            else:
+                team_nums.append(row_dict['Red team 1'])
+                raw_matches[row_dict['Red team 1']] = []
+                raw_matches[row_dict['Red team 1']].append('R' + str(row_dict['Match code']))
+                teams[row_dict['Red team 1']] = dict()
+                teams[row_dict['Red team 1']]['Team #'] = row_dict['Red team 1']
 
-                teams[temp_teamn1] = {'Team #': temp_teamn1,
-                                      'Best Score': temp_scores1[0],
-                                      'Worst Score': temp_scores1[0],
-                                      'Disconnects': 0,
-                                      'NumOfScores': 1,
-                                      'Missed Hangs': 0
-                                      }
-                if row_dict['Disconnects1?'] == '1':
-                    teams[temp_teamn1]['Disconnects'] += 1
+            if row_dict['Red team 2'] in raw_matches:
+                raw_matches[row_dict['Red team 2']].append('R' + str(row_dict['Match code']))
+            else:
+                team_nums.append(row_dict['Red team 1'])
+                raw_matches[row_dict['Red team 2']] = []
+                raw_matches[row_dict['Red team 2']].append('R' + str(row_dict['Match code']))
+                teams[row_dict['Red team 2']] = dict()
+                teams[row_dict['Red team 2']]['Team #'] = row_dict['Red team 2']
 
-                # Now with the second team
+            if row_dict['Blue team 1'] in raw_matches:
+                raw_matches[row_dict['Blue team 1']].append('B' + str(row_dict['Match code']))
+            else:
+                team_nums.append(row_dict['Red team 1'])
+                raw_matches[row_dict['Blue team 1']] = []
+                raw_matches[row_dict['Blue team 1']].append('B' + str(row_dict['Match code']))
+                teams[row_dict['Blue team 1']] = dict()
+                teams[row_dict['Blue team 1']]['Team #'] = row_dict['Blue team 1']
 
-                team_scores[temp_teamn2] = [temp_scores2[0]]
-                auto_scores[temp_teamn2] = [temp_scores2[1]]
-                teleop_scores[temp_teamn2] = [temp_scores2[2]]
-                endgame_scores[temp_teamn2] = [temp_scores2[3]]
-
-                teams[temp_teamn2] = {'Team #': temp_teamn2,
-                                      'Best Score': temp_scores2[0],
-                                      'Worst Score': temp_scores2[0],
-                                      'Disconnects': 0,
-                                      'NumOfScores': 1,
-                                      'Missed Hangs': 0
-                                      }
-                if row_dict['Disconnects2?'] == '1':
-                    teams[temp_teamn2]['Disconnects'] += 1
-
-            if row_dict['Parking1'] != 'H':
-                teams[temp_teamn1]['Missed Hangs'] += 1
-            if row_dict['Parking2'] != 'H':
-                teams[temp_teamn2]['Missed Hangs'] += 1
+            if row_dict['Blue team 2'] in raw_matches:
+                raw_matches[row_dict['Blue team 2']].append('B' + str(row_dict['Match code']))
+            else:
+                team_nums.append(row_dict['Red team 1'])
+                raw_matches[row_dict['Blue team 2']] = []
+                raw_matches[row_dict['Blue team 2']].append('B' + str(row_dict['Match code']))
+                teams[row_dict['Blue team 2']] = dict()
+                teams[row_dict['Blue team 2']]['Team #'] = row_dict['Blue team 2']
 
             row_count += 1
-    # Then it will
-    # And saving specific scores and names together for processing
+
+        print('hello')
+
+    with open(csv_location) as csvFile:
+        team_order = []  # The order teams are placed into rows
+        match_order = []  # the order matches (identified by match code) will be placed into the matrix
+        result_sheet = csv.DictReader(csvFile, delimiter=',')  # the sheet
+        sort_count = 0
+
+        for arow in result_sheet:
+            rowdic = dict(arow)
+            match_order.append('R' + str(rowdic['Match code']))
+            matches.append([])
+            matches.append([])
+            if sort_count == 0:
+                for team in raw_matches:
+                    if team not in team_order:
+                        opponent_score.append([])
+                        print(team)
+                        team_order.append(team)
+                    presentr = False
+                    presentb = False
+                    for pres in raw_matches[team]:
+                        # checks if a team was blue or red in that match
+                        if not presentr:
+                            if ('R' + str(rowdic['Match code'])) == pres:
+                                matches[sort_count].append(1)
+                                presentr = True
+
+                    if not presentr:
+                        matches[sort_count].append(0)
+
+                        for pres in raw_matches[team]:
+                            # checks if a team was blue or red in that match
+                            if not presentb:
+                                if 'B' + str(rowdic['Match code']) == pres:
+                                    matches[(sort_count + 1)].append(1)
+                                    presentb = True
+
+                    if not presentb:
+                        matches[sort_count + 1].append(0)
+            if sort_count != 0:
+                num = 0
+                while num < len(team_order):
+                    presentr = False
+                    presentb = False
+                    for pres in raw_matches[team_order[num]]:
+                        # checks if a team was blue or red in that match
+                        if not presentr:
+                            if ('R' + str(rowdic['Match code'])) == pres:
+                                matches[sort_count].append(1)
+                                presentr = True
+
+                    if not presentr:
+                        matches[sort_count].append(0)
+
+                        for pres in raw_matches[team_order[num]]:
+                            # checks if a team was blue or red in that match
+                            if not presentb:
+                                if 'B' + str(rowdic['Match code']) == pres:
+                                    matches[(sort_count + 1)].append(1)
+                                    presentb = True
+
+                    if not presentb:
+                        matches[sort_count + 1].append(0)
+                    num += 1
+
+            sort_count += 2
+
+
 
     # assigns team names to numbers
 
+    # gets team names from refcxv
     cwd = os.getcwd()
     print('here')
     print(cwd)
@@ -293,9 +291,20 @@ def csv_sheet(refcsv, cwd, csv_location, allteam):
                         teams[teamn]['Name'] = ref_name
                         print('successful')
                         break
-
-    allteam = [matches, teams, team_scores, auto_scores, teleop_scores, endgame_scores]
+    print('auto shape')
+    print(auto_scores)
+    print(raw_matches)
+    allteam = [matches, teams, total_scores, auto_scores, teleop_scores,
+               endgame_scores, match_order, team_order, full_csv, raw_matches, team_scores]
 
     return allteam
 
 
+def tally(row_dict):
+    red_score = int(row_dict['Red auto']) + int(row_dict['Red teleop'])
+    red_score += int(row_dict['Red endgame']) + int(row_dict['Blue penalty'])
+
+    blue_score = int(row_dict['Blue auto']) + int(row_dict['Blue teleop'])
+    blue_score += int(row_dict['Blue endgame']) + int(row_dict['Red penalty'])
+    scores = [red_score, blue_score]
+    return scores
