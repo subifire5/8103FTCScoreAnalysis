@@ -154,8 +154,8 @@ def medstd(teams, **kwargs):
 
 def misc_score(teams, team_scores):
     for teamn in teams:
-        temp_best = 0
-        temp_worst = 0
+        temp_best = team_scores[teamn]['Total'][0]
+        temp_worst = team_scores[teamn]['Total'][0]
         for score in team_scores[teamn]['Total']:
             print(team_scores)
             if temp_best < score:
@@ -164,7 +164,7 @@ def misc_score(teams, team_scores):
                 temp_worst = score
         teams[teamn]['Best Score'] = temp_best
         teams[teamn]['Worst Score'] = temp_worst
-        teams[teamn]['NumOfScores'] = len(team_scores[teamn])
+        teams[teamn]['NumOfScores'] = len(team_scores[teamn]['Total'])
         print(teams[teamn])
     return teams
 
