@@ -4,6 +4,7 @@ import collections as cl
 import pandas
 import bs4
 import numpy as np
+import EventClass as ec
 
 # Autonomous Period
 
@@ -27,24 +28,22 @@ fully_in_craterv = 25
 
 
 def csv_sheet(refcsv, cwd, csv_location):
-
-    total_scores = []  # the scores for each match
-    auto_scores = []  # auto scores for each match
-    teleop_scores = []  # teleop scores for each match
-    endgame_scores = []  # endgame scores for each match
-    raw_matches = dict()  # A dictionary of lists representing teams in a match
-    matches = []  # a lists of lists, each representing a color in a match
-    teams = dict()  # A dict of dicts that will hold the processed data of all teams
-    opponent_score = []  # a list of lists, each representing the scores against a team in a match
-    team_scores = dict()  # a dict of lists of lists team scores
-    full_csv = []
+    events = dict()
     # Changes the directory to The Excel Folder
+    '''
+    1. you need to make code more efficient
+    To do this, process each event (i.e. tesla interlagues, tesla qualifierrs)
+    as a seperate event rather than the entire set of matches as one huge table
+    get the OPR, DPR, etc of each team multiple times like that, and then
+    average out their stats from each competitin
+
+    this means you make multipel instances of each team, one for each event they were at
+    it also means calculating hte linear algebra will be done with only around 30 matches at a time.
+    '''
     os.chdir(cwd)
     os.chdir('..')
     cwd = os.getcwd()
     match_num = 0
-    print(cwd)
-    print(csv_location)
     csv_location = cwd + csv_location
     with open(csv_location) as csvFile:
 
@@ -53,24 +52,61 @@ def csv_sheet(refcsv, cwd, csv_location):
         row_count = 0  # the row being iterated
 
         # The code will skip the first row with real data
-        count=0
+        count = 0
         team_nums = []
         for row in result_sheet:
+            row_dict = dict(row)
+            ev = row_dict['Event']  # a placeholder for the name of an event
+            r1 = row_dict['Red team 1']
+            r2 = row_dict['Red team 2']
+            b1 = row_dict['Blue team 1']
+            b2 = row_dict['Blue team 2']
+            rau = row_dict['Red auto']
+            rte = row_dict['Red teleop']
+            ren = row_dict['Red endgame']
+            bau = row_dict['Blue auto']
+            bte = row_dict['Blue teleop']
+            ben = row_dict['Blue endgame']
+            maco = row_dict['Match code']
+            try:
+                events[ev].full_csv.append(row_dict)
+                events[ev].auto_scores.append(int(rau))
+                events[ev].auto_scores.append(int(bau))
+                events[ev].teleop_scores.append(int(rte))
+                events[ev].teleop_scores.append(int(bte))
+                events[ev].endgame_scores.append(int(ren))
+                events[ev].endgame_scores.append(int(ben))
+                scores = tally(row_dict)
+                events[ev].total_scores.append(scores[0])
+                events[ev].total_scores.append(scores[1])
+
+            except KeyError:
+                events[ev] = ec.Event()
+                events[ev].full_csv.append(row_dict)
+                events[ev].auto_scores.append(int(rau))
+                events[ev].auto_scores.append(int(bau))
+                events[ev].teleop_scores.append(int(rte))
+                events[ev].teleop_scores.append(int(bte))
+                events[ev].endgame_scores.append(int(ren))
+                events[ev].endgame_scores.append(int(ben))
+                scores = tally(row_dict)
+                events[ev].total_scores.append(scores[0])
+                events[ev].total_scores.append(scores[1])
+
             # if row_count > 0:
-            count+=1
-            print(count)
+            count += 1
 
             '''
-            A brief explanation
-            
+            A brief explanation2
+
             each of the score lists is a list that has the scores of an alliance
             it is updated for each side of a match
             the red team's score is put in first, then the blue teams
             this is important for later
-            
+
             the total_scores is the total score for an alliance
             that includes penalties
-            
+
             The next part of the code accesses a dictionary of lists
             called "matches"
             the key to each list is a team's name
@@ -83,70 +119,85 @@ def csv_sheet(refcsv, cwd, csv_location):
             0
             0
             0
-            
+
             the program automatically adds two 0's to each team on record
             unless they play in that match
-            
+
             if a team isn't on record the program will calculate how many 0's need to be added
             '''
 
+            if row_dict['Red team 1'] in events[ev].team_scores:
+                events[ev].team_scores[r1]['Auto'].append(int(rau))
+                events[ev].team_scores[r1]['Teleop'].append(int(rte))
+                events[ev].team_scores[r1]['Endgame'].append(int(ren))
+                events[ev].team_scores[r1]['Total'].append(scores[0])
+                events[ev].match_stats[r1].append('R'+maco)
+            else:
+                events[ev].team_scores[r1] = dict()
+                events[ev].team_scores[r1]['Auto'] = []
+                events[ev].team_scores[r1]['Teleop'] = []
+                events[ev].team_scores[r1]['Endgame'] = []
+                events[ev].team_scores[r1]['Total'] = []
+                events[ev].match_stats[r1] = ['R'+maco]
+                events[ev].team_scores[r1]['Auto'].append(int(rau))
+                events[ev].team_scores[r1]['Teleop'].append(int(rte))
+                events[ev].team_scores[r1]['Endgame'].append(int(ren))
+                events[ev].team_scores[r1]['Total'].append(scores[0])
 
-            row_dict = dict(row)
-            full_csv.append(row_dict)
-            auto_scores.append(int(row_dict['Red auto']))
-            auto_scores.append(int(row_dict['Blue auto']))
-            teleop_scores.append(int(row_dict['Red teleop']))
-            teleop_scores.append(int(row_dict['Blue teleop']))
-            endgame_scores.append(int(row_dict['Red endgame']))
-            endgame_scores.append(int(row_dict['Blue endgame']))
-            scores = tally(row_dict)
-            total_scores.append(scores[0])
-            total_scores.append(scores[1])
-            if row_dict['Red team 1'] in team_scores:
-                team_scores[row_dict['Red team 1']]['Auto'].append(int(row_dict['Red auto']))
-                team_scores[row_dict['Red team 1']]['Teleop'].append(int(row_dict['Red teleop']))
-                team_scores[row_dict['Red team 1']]['Endgame'].append(int(row_dict['Red endgame']))
-                team_scores[row_dict['Red team 1']]['Total'].append(scores[0])
+            if row_dict['Red team 2'] in events[ev].team_scores:
+                events[ev].team_scores[r2]['Auto'].append(int(rau))
+                events[ev].team_scores[r2]['Teleop'].append(int(rte))
+                events[ev].team_scores[r2]['Endgame'].append(int(ren))
+                events[ev].team_scores[r2]['Total'].append(scores[0])
+                events[ev].match_stats[r2].append('R'+maco)
             else:
-                team_scores[row_dict['Red team 1']] = dict()
-                team_scores[row_dict['Red team 1']]['Auto'] = [int(row_dict['Red auto'])]
-                team_scores[row_dict['Red team 1']]['Teleop'] = [int(row_dict['Red teleop'])]
-                team_scores[row_dict['Red team 1']]['Endgame'] = [int(row_dict['Red endgame'])]
-                team_scores[row_dict['Red team 1']]['Total'] = [scores[0]]
-            if row_dict['Red team 2'] in team_scores:
-                team_scores[row_dict['Red team 2']]['Auto'].append(int(row_dict['Red auto']))
-                team_scores[row_dict['Red team 2']]['Teleop'].append(int(row_dict['Red teleop']))
-                team_scores[row_dict['Red team 2']]['Endgame'].append(int(row_dict['Red endgame']))
-                team_scores[row_dict['Red team 2']]['Total'].append(scores[0])
+                events[ev].team_scores[r2] = dict()
+                events[ev].team_scores[r2]['Auto'] = []
+                events[ev].team_scores[r2]['Teleop'] = []
+                events[ev].team_scores[r2]['Endgame'] = []
+                events[ev].team_scores[r2]['Total'] = []
+                events[ev].match_stats[r2] = ['R'+maco]
+                events[ev].team_scores[r2]['Auto'].append(int(rau))
+                events[ev].team_scores[r2]['Teleop'].append(int(rte))
+                events[ev].team_scores[r2]['Endgame'].append(int(ren))
+                events[ev].team_scores[r2]['Total'].append(scores[0])
+
+            if row_dict['Blue team 1'] in events[ev].team_scores:
+                events[ev].team_scores[b1]['Auto'].append(int(bau))
+                events[ev].team_scores[b1]['Teleop'].append(int(bte))
+                events[ev].team_scores[b1]['Endgame'].append(int(ben))
+                events[ev].team_scores[b1]['Total'].append(scores[0])
+                events[ev].match_stats[b1].append('B'+maco)
             else:
-                team_scores[row_dict['Red team 2']] = dict()
-                team_scores[row_dict['Red team 2']]['Auto'] = [int(row_dict['Red auto'])]
-                team_scores[row_dict['Red team 2']]['Teleop'] = [int(row_dict['Red teleop'])]
-                team_scores[row_dict['Red team 2']]['Endgame'] = [int(row_dict['Red endgame'])]
-                team_scores[row_dict['Red team 2']]['Total'] = [scores[0]]
-            if row_dict['Blue team 1'] in team_scores:
-                team_scores[row_dict['Blue team 1']]['Auto'].append(int(row_dict['Blue auto']))
-                team_scores[row_dict['Blue team 1']]['Teleop'].append(int(row_dict['Blue teleop']))
-                team_scores[row_dict['Blue team 1']]['Endgame'].append(int(row_dict['Blue endgame']))
-                team_scores[row_dict['Blue team 1']]['Total'].append(scores[0])
+                events[ev].team_scores[b1] = dict()
+                events[ev].team_scores[b1]['Auto'] = []
+                events[ev].team_scores[b1]['Teleop'] = []
+                events[ev].team_scores[b1]['Endgame'] = []
+                events[ev].team_scores[b1]['Total'] = []
+                events[ev].match_stats[b1] = ['B'+maco]
+                events[ev].team_scores[b1]['Auto'].append(int(bau))
+                events[ev].team_scores[b1]['Teleop'].append(int(bte))
+                events[ev].team_scores[b1]['Endgame'].append(int(ben))
+                events[ev].team_scores[b1]['Total'].append(scores[0])
+
+            if row_dict['Blue team 2'] in events[ev].team_scores:
+                events[ev].team_scores[b2]['Auto'].append(int(bau))
+                events[ev].team_scores[b2]['Teleop'].append(int(bte))
+                events[ev].team_scores[b2]['Endgame'].append(int(ben))
+                events[ev].team_scores[b2]['Total'].append(scores[0])
+                events[ev].match_stats[b2].append('B'+maco)
             else:
-                team_scores[row_dict['Blue team 1']] = dict()
-                team_scores[row_dict['Blue team 1']]['Auto'] = [int(row_dict['Blue auto'])]
-                team_scores[row_dict['Blue team 1']]['Teleop'] = [int(row_dict['Blue teleop'])]
-                team_scores[row_dict['Blue team 1']]['Endgame'] = [int(row_dict['Blue endgame'])]
-                team_scores[row_dict['Blue team 1']]['Total'] = [scores[1]]
-            if row_dict['Blue team 2'] in team_scores:
-                team_scores[row_dict['Blue team 2']]['Auto'].append(int(row_dict['Blue auto']))
-                team_scores[row_dict['Blue team 2']]['Teleop'].append(int(row_dict['Blue teleop']))
-                team_scores[row_dict['Blue team 2']]['Endgame'].append(int(row_dict['Blue endgame']))
-                team_scores[row_dict['Blue team 2']]['Total'].append(scores[0])
-            else:
-                team_scores[row_dict['Blue team 2']] = dict()
-                team_scores[row_dict['Blue team 2']]['Auto'] = [int(row_dict['Blue auto'])]
-                team_scores[row_dict['Blue team 2']]['Teleop'] = [int(row_dict['Blue teleop'])]
-                team_scores[row_dict['Blue team 2']]['Endgame'] = [int(row_dict['Blue endgame'])]
-                team_scores[row_dict['Blue team 2']]['Total'] = [scores[1]]
-            match_num += 2  # adds 2 each time because each match has a red and blue side
+                events[ev].team_scores[b2] = dict()
+                events[ev].team_scores[b2]['Auto'] = []
+                events[ev].team_scores[b2]['Teleop'] = []
+                events[ev].team_scores[b2]['Endgame'] = []
+                events[ev].team_scores[b2]['Total'] = []
+                events[ev].match_stats[b2] = ['B'+maco]
+                events[ev].team_scores[b2]['Auto'].append(int(bau))
+                events[ev].team_scores[b2]['Teleop'].append(int(bte))
+                events[ev].team_scores[b2]['Endgame'].append(int(ben))
+                events[ev].team_scores[b2]['Total'].append(scores[0])
+            events[ev].match_num += 2  # adds 2 each time because each match has a red and blue side
             # adding 0's and 1's
             '''
                         label which matches a team was in and which color
@@ -154,127 +205,136 @@ def csv_sheet(refcsv, cwd, csv_location):
                         then generate 1's and 0's accordingly
                         '''
 
-            if row_dict['Red team 1'] in raw_matches:
-                raw_matches[row_dict['Red team 1']].append('R'+str(row_dict['Match code']))
+            if row_dict['Red team 1'] in events[ev].raw_matches:
+                events[ev].raw_matches[r1].append('R' + str(maco))
             else:
-                team_nums.append(row_dict['Red team 1'])
-                raw_matches[row_dict['Red team 1']] = []
-                raw_matches[row_dict['Red team 1']].append('R' + str(row_dict['Match code']))
-                teams[row_dict['Red team 1']] = dict()
-                teams[row_dict['Red team 1']]['Team #'] = row_dict['Red team 1']
+                events[ev].team_nums.append(r1)
+                events[ev].raw_matches[r1] = []
+                events[ev].raw_matches[r1].append('R' + str(maco))
+                events[ev].teams[r1] = dict()
+                events[ev].teams[r1]['Team #'] = r1
 
-            if row_dict['Red team 2'] in raw_matches:
-                raw_matches[row_dict['Red team 2']].append('R' + str(row_dict['Match code']))
+            if row_dict['Red team 2'] in events[ev].raw_matches:
+                events[ev].raw_matches[r2].append('R' + str(maco))
             else:
-                team_nums.append(row_dict['Red team 1'])
-                raw_matches[row_dict['Red team 2']] = []
-                raw_matches[row_dict['Red team 2']].append('R' + str(row_dict['Match code']))
-                teams[row_dict['Red team 2']] = dict()
-                teams[row_dict['Red team 2']]['Team #'] = row_dict['Red team 2']
+                events[ev].team_nums.append(r2)
+                events[ev].raw_matches[r2] = []
+                events[ev].raw_matches[r2].append('R' + str(maco))
+                events[ev].teams[r2] = dict()
+                events[ev].teams[r2]['Team #'] = r2
 
-            if row_dict['Blue team 1'] in raw_matches:
-                raw_matches[row_dict['Blue team 1']].append('B' + str(row_dict['Match code']))
+            if row_dict['Blue team 1'] in events[ev].raw_matches:
+                events[ev].raw_matches[b1].append('B' + str(maco))
             else:
-                team_nums.append(row_dict['Red team 1'])
-                raw_matches[row_dict['Blue team 1']] = []
-                raw_matches[row_dict['Blue team 1']].append('B' + str(row_dict['Match code']))
-                teams[row_dict['Blue team 1']] = dict()
-                teams[row_dict['Blue team 1']]['Team #'] = row_dict['Blue team 1']
+                events[ev].team_nums.append(b1)
+                events[ev].raw_matches[b1] = []
+                events[ev].raw_matches[b1].append('B' + str(maco))
+                events[ev].teams[b1] = dict()
+                events[ev].teams[b1]['Team #'] = b1
 
-            if row_dict['Blue team 2'] in raw_matches:
-                raw_matches[row_dict['Blue team 2']].append('B' + str(row_dict['Match code']))
+            if row_dict['Blue team 2'] in events[ev].raw_matches:
+                events[ev].raw_matches[b2].append('B' + str(maco))
             else:
-                team_nums.append(row_dict['Red team 1'])
-                raw_matches[row_dict['Blue team 2']] = []
-                raw_matches[row_dict['Blue team 2']].append('B' + str(row_dict['Match code']))
-                teams[row_dict['Blue team 2']] = dict()
-                teams[row_dict['Blue team 2']]['Team #'] = row_dict['Blue team 2']
+                events[ev].team_nums.append(b2)
+                events[ev].raw_matches[b2] = []
+                events[ev].raw_matches[b2].append('B' + str(maco))
+                events[ev].teams[b2] = dict()
+                events[ev].teams[b2]['Team #'] = b2
 
             row_count += 1
-
-        print('hello')
+        for ev in events:
+            print('teams in general')
+            print(events[ev].teams)
 
     with open(csv_location) as csvFile:
-        team_order = []  # The order teams are placed into rows
-        match_order = []  # the order matches (identified by match code) will be placed into the matrix
         result_sheet = csv.DictReader(csvFile, delimiter=',')  # the sheet
-        sort_count = 0
-
         for arow in result_sheet:
             rowdic = dict(arow)
-            match_order.append('R' + str(rowdic['Match code']))
-            matches.append([])
-            matches.append([])
-            if sort_count == 0:
-                for team in raw_matches:
-                    if team not in team_order:
-                        opponent_score.append([])
-                        print(team)
-                        team_order.append(team)
+            ev = rowdic['Event']  # a placeholder for the name of an event
+            r1 = rowdic['Red team 1']
+            r2 = rowdic['Red team 2']
+            b1 = rowdic['Blue team 1']
+            b2 = rowdic['Blue team 2']
+            rau = rowdic['Red auto']
+            rte = rowdic['Red teleop']
+            ren = rowdic['Red endgame']
+            bau = rowdic['Blue auto']
+            bte = rowdic['Blue teleop']
+            ben = rowdic['Blue endgame']
+            maco = rowdic['Match code']
+
+            events[ev].match_order.append('R' + str(maco))
+            events[ev].matches.append([])
+            events[ev].matches.append([])
+            if events[ev].sort_count == 0:
+                for team in events[ev].raw_matches:
+                    if team not in events[ev].team_order:
+                        events[ev].opponent_score.append([])
+                        events[ev].team_order.append(team)
                     presentr = False
                     presentb = False
-                    for pres in raw_matches[team]:
+                    for pres in events[ev].raw_matches[team]:
                         # checks if a team was blue or red in that match
                         if not presentr:
-                            if ('R' + str(rowdic['Match code'])) == pres:
-                                matches[sort_count].append(1)
+                            if ('R' + str(maco)) == pres:
+                                events[ev].matches[events[ev].sort_count].append(1)
                                 presentr = True
 
                     if not presentr:
-                        matches[sort_count].append(0)
+                        events[ev].matches[events[ev].sort_count].append(0)
 
-                        for pres in raw_matches[team]:
+                        for pres in events[ev].raw_matches[team]:
                             # checks if a team was blue or red in that match
                             if not presentb:
-                                if 'B' + str(rowdic['Match code']) == pres:
-                                    matches[(sort_count + 1)].append(1)
+                                if 'B' + str(maco) == pres:
+                                    events[ev].matches[(events[ev].sort_count + 1)].append(1)
                                     presentb = True
 
                     if not presentb:
-                        matches[sort_count + 1].append(0)
-            if sort_count != 0:
-                num = 0
-                while num < len(team_order):
+                        events[ev].matches[events[ev].sort_count + 1].append(0)
+            if events[ev].sort_count != 0:
+                events[ev].num = 0
+                while events[ev].num < len(events[ev].team_order):
                     presentr = False
                     presentb = False
-                    for pres in raw_matches[team_order[num]]:
+                    for pres in events[ev].raw_matches[events[ev].team_order[events[ev].num]]:
                         # checks if a team was blue or red in that match
                         if not presentr:
-                            if ('R' + str(rowdic['Match code'])) == pres:
-                                matches[sort_count].append(1)
+                            if ('R' + str(maco)) == pres:
+                                events[ev].matches[events[ev].sort_count].append(1)
                                 presentr = True
 
                     if not presentr:
-                        matches[sort_count].append(0)
+                        events[ev].matches[events[ev].sort_count].append(0)
 
-                        for pres in raw_matches[team_order[num]]:
+                        for pres in events[ev].raw_matches[events[ev].team_order[events[ev].num]]:
                             # checks if a team was blue or red in that match
                             if not presentb:
                                 if 'B' + str(rowdic['Match code']) == pres:
-                                    matches[(sort_count + 1)].append(1)
+                                    events[ev].matches[(events[ev].sort_count + 1)].append(1)
                                     presentb = True
 
                     if not presentb:
-                        matches[sort_count + 1].append(0)
-                    num += 1
+                        events[ev].matches[events[ev].sort_count + 1].append(0)
+                    events[ev].num += 1
 
-            sort_count += 2
-
-
+            events[ev].sort_count += 2
+    for ev in events:
+        print('here')
+        print(events[ev].matches)
 
     # assigns team names to numbers
 
     # gets team names from refcxv
     cwd = os.getcwd()
-    print('here')
-    print(cwd)
     refcsv = cwd + refcsv
     with open(refcsv) as csvFile:
 
         result_sheet = csv.DictReader(csvFile, delimiter=',')  # the sheet
+        en = row_dict['Event']  # a placeholder for the name of an event
 
         # The code will skip the first row with real data
-        print(teams)
+
         for row in result_sheet:
             # if row_count > 0:
 
@@ -282,22 +342,16 @@ def csv_sheet(refcsv, cwd, csv_location):
 
             ref_teamn = row_dict['Team #']
             ref_name = row_dict['Name']
-            for teamn in teams:
+            for teamn in events[ev].teams:
                 try:
-                    r = teams[teamn]['Name']
+                    r = events[ev].teams[teamn]['Name']
                 except KeyError:
 
-                    if teams[teamn]['Team #'] == ref_teamn:
-                        teams[teamn]['Name'] = ref_name
-                        print('successful')
+                    if events[ev].teams[teamn]['Team #'] == ref_teamn:
+                        events[ev].teams[teamn]['Name'] = ref_name
                         break
-    print('auto shape')
-    print(auto_scores)
-    print(raw_matches)
-    allteam = [matches, teams, total_scores, auto_scores, teleop_scores,
-               endgame_scores, match_order, team_order, full_csv, raw_matches, team_scores]
 
-    return allteam
+    return events
 
 
 def tally(row_dict):
@@ -308,3 +362,4 @@ def tally(row_dict):
     blue_score += int(row_dict['Blue endgame']) + int(row_dict['Red penalty'])
     scores = [red_score, blue_score]
     return scores
+

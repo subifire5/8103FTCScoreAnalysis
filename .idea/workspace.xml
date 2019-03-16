@@ -13,10 +13,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Code/RoboticsStatistics.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1602">
-              <caret line="456" selection-start-line="372" selection-end-line="456" />
+            <state relative-caret-position="283">
+              <caret line="422" column="33" lean-forward="true" selection-start-line="422" selection-start-column="33" selection-end-line="422" selection-end-column="33" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
+                <element signature="e#4443#5658#0" />
               </folding>
             </state>
           </provider>
@@ -25,8 +26,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/CSVRankings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1126">
-              <caret line="264" column="16" lean-forward="true" selection-start-line="264" selection-start-column="16" selection-end-line="264" selection-end-column="16" />
+            <state relative-caret-position="312">
+              <caret line="204" column="61" lean-forward="true" selection-start-line="204" selection-start-column="61" selection-end-line="204" selection-end-column="61" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Code/EventClass.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="164">
+              <caret line="14" column="26" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -36,17 +49,17 @@
       </file>
     </leaf>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>print</find>
-      <find>total_scores</find>
-      <find>[</find>
-      <find>auto_opr</find>
-      <find>match</find>
-      <find>auto</find>
       <find>np.array</find>
       <find>round</find>
-      <find>ccwm</find>
       <find>dpr</find>
       <find>rounding:</find>
       <find>around</find>
@@ -55,6 +68,26 @@
       <find>found</find>
       <find>misc</find>
       <find>team_scores</find>
+      <find>num</find>
+      <find>raw_mat</find>
+      <find>match_stats</find>
+      <find>matches</find>
+      <find>ccwm</find>
+      <find>medi</find>
+      <find>pic</find>
+      <find>teams</find>
+      <find>np.around</find>
+      <find>median</find>
+      <find>numof</find>
+      <find>stats</find>
+      <find>all_teams</find>
+      <find>team_num</find>
+      <find>events.</find>
+      <find>opr</find>
+      <find>hell</find>
+      <find>code</find>
+      <find>match_s</find>
+      <find>print</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -63,12 +96,14 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+        <option value="$PROJECT_DIR$/Code/event.py" />
+        <option value="$PROJECT_DIR$/Code/EventClass.py" />
         <option value="$PROJECT_DIR$/Code/CSVRankings.py" />
         <option value="$PROJECT_DIR$/Code/RoboticsStatistics.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="953" />
     <option name="width" value="974" />
     <option name="height" value="1047" />
@@ -154,15 +189,14 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="953" y="0" width="974" height="1047" extended-state="0" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.14488935" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.071127504" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.33260393" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.33152762" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -196,10 +230,30 @@
     </layout-to-restore>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Code/event.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/EventClass.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="164">
+          <caret line="14" column="26" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Code/CSVRankings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1126">
-          <caret line="264" column="16" lean-forward="true" selection-start-line="264" selection-start-column="16" selection-end-line="264" selection-end-column="16" />
+        <state relative-caret-position="312">
+          <caret line="204" column="61" lean-forward="true" selection-start-line="204" selection-start-column="61" selection-end-line="204" selection-end-column="61" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
@@ -208,10 +262,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Code/RoboticsStatistics.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1602">
-          <caret line="456" selection-start-line="372" selection-end-line="456" />
+        <state relative-caret-position="283">
+          <caret line="422" column="33" lean-forward="true" selection-start-line="422" selection-start-column="33" selection-end-line="422" selection-end-column="33" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#4443#5658#0" />
           </folding>
         </state>
       </provider>
