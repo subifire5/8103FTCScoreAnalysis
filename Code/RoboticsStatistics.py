@@ -9,9 +9,9 @@ import pandas
 import numpy as np
 
 
-def data_col(refcsv, cwda, csva):
+def data_col(refcsv, cwda, csva, refcsv2):
 
-    raw_events = csv_sheet(refcsv, cwda, csva)
+    raw_events = csv_sheet(refcsv, cwda, csva, refcsv2)
     events = dict()
     for ev in raw_events:
         events[ev] = ec.Event()
@@ -332,7 +332,7 @@ def pics(ev, ploc):  # turns a teams pictures into an excel hyperlinks
             ev.teams[teamn]['Picture'] = x
         else:
             ev.teams[teamn]['Picture'] = 'NA'
-s
+
 
 def create_file(all_teams, cwd, csv2, default_d,  metric):
     y = sorted(all_teams, key=lambda x: (all_teams[x][metric]), reverse=True)
@@ -371,7 +371,7 @@ def main():
     cwd = os.getcwd()
 
     cwda = "CSV"  # a location of the csv's you want.
-    csva = "/CSV/raw_matches.csv"  # the csv's in question
+    csva = "/CSV/WAStateRREvents.csv"  # the csv's in question
     refcsv1 = "/CSV/ReferenceList1.csv"  # csv with some team names
     ranking_cwd = "/CSV/"  # the folder of the rankings csv
     ranking_csv = "/CSV/Rankings.csv"  # The file that you want to place the rankings in.
@@ -380,7 +380,9 @@ def main():
     pic_cwd = '/TeamPics/'  # the location of the teams pictures
     all_teams = dict()
     metric = 'OPR'
-
+    specific_teams = True  # look at only specific teams?
+    spec_csv = '/CSV/WAStateRoverRuckus.csv'  # csv of teams you want to look for
+    spec_teams = []  # list of teams to look for
     years = ['2018', '2017', '2016', '2015', '2014', '2013', '2012', '2011', '2010', '2009']
     default_d = {'Team #': 0,   # A Default team, updated with keys, used as the
                  'Name': 'NA',  # index for all of the keys a team would have
@@ -398,12 +400,20 @@ def main():
                  'Preferred Side': 'None',
                  'Picture': ''
                  }
-    '''
-    [match_matrix, teams, total_scores, auto_scores, teleop_scores,
-                endgame_scores, match_order, team_order, raw_matches[0], full_csv, match_stats
-    '''
+    if specific_teams:
+        cwd = os.getcwd()
+        match_num = 0
+        spec_csv = cwd + spec_csv
+        with open(spec_csv) as csvFile:
+            result_sheet = csv.DictReader(csvFile, delimiter=',')  # the sheet
+
+            for row in result_sheet:
+                row_dict = dict(row)
+                spec_teams.append(row_dict['Number'])
+
+
     # collects the data
-    events = data_col(refcsv1, cwda, csva)
+    events = data_col(refcsv1, cwda, csva, spec_csv)
     nyc = 'NYC FIRST Tech Challenge Qualifier 6'
 
     for ev in events:
@@ -471,7 +481,32 @@ def main():
         total_teams[teamn]=dict()
         total_teams[teamn] = all_teams[teamn]['Final']
     print(total_teams)
-    create_file(total_teams, ranking_cwd, ranking_csv, default_d, metric)
+    chosen_teams = dict()
+
+    for teamn in total_teams:
+        if teamn in spec_teams:
+            chosen_teams[teamn] = total_teams[teamn]
+    with open(spec_csv) as csvFile:
+
+        result_sheet = csv.DictReader(csvFile, delimiter=',')  # the sheet
+        # The code will skip the first row with real data
+
+        for row in result_sheet:
+            # if row_count > 0:
+
+            row_dict = dict(row)
+
+            ref_teamn = row_dict['Number']
+            ref_name = row_dict['Name']
+            for teamn in chosen_teams:
+                try:
+                    r = chosen_teams[teamn]['Name']
+                except KeyError:
+
+                    if chosen_teams[teamn]['Team #'] == ref_teamn:
+                        chosen_teams[teamn]['Name'] = ref_name
+                        break
+    create_file(chosen_teams, ranking_cwd, ranking_csv, default_d, metric)
 
     '''
     # applies the functions to the data

@@ -27,7 +27,7 @@ part_in_craterv = 15
 fully_in_craterv = 25
 
 
-def csv_sheet(refcsv, cwd, csv_location):
+def csv_sheet(refcsv, cwd, csv_location, refcsv2):
     events = dict()
     # Changes the directory to The Excel Folder
     '''
@@ -350,6 +350,7 @@ def csv_sheet(refcsv, cwd, csv_location):
                     if events[ev].teams[teamn]['Team #'] == ref_teamn:
                         events[ev].teams[teamn]['Name'] = ref_name
                         break
+
 
     return events
 
