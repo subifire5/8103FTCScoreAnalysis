@@ -43,29 +43,16 @@ def full_median(teams, team_scores, auto_scores, teleop_scores, endgame_scores):
         teams[teamn]['Auto Median'] = st.median(auto_scores[teamn])
         teams[teamn]['Teleop Median'] = st.median(teleop_scores[teamn])
         teams[teamn]['Endgame Median'] = st.median(endgame_scores[teamn])
-        if len(team_scores['Gl' + teamn]) > 0:
-            teams[teamn]['GlMedian'] = st.median(team_scores['Gl' + teamn])
-            teams[teamn]['GlAuto Median'] = st.median(auto_scores['Gl' + teamn])
-            teams[teamn]['GlTeleop Median'] = st.median(teleop_scores['Gl' + teamn])
-            teams[teamn]['GlEndgame Median'] = st.median(endgame_scores['Gl' + teamn])
 
-        else:
-            teams[teamn]['GlMedian'] = 'NA'
-            teams[teamn]['GlAuto Median'] = 'NA'
-            teams[teamn]['GlTeleop Median'] = 'NA'
-            teams[teamn]['GlEndgame Median'] = 'NA'
+        teams[teamn]['GlMedian'] = 'NA'
+        teams[teamn]['GlAuto Median'] = 'NA'
+        teams[teamn]['GlTeleop Median'] = 'NA'
+        teams[teamn]['GlEndgame Median'] = 'NA'
 
-        if len(team_scores['Sl' + teamn]) > 0:
-            teams[teamn]['SlMedian'] = st.median(team_scores['Sl' + teamn])
-            teams[teamn]['SlAuto Median'] = st.median(auto_scores['Sl' + teamn])
-            teams[teamn]['SlTeleop Median'] = st.median(teleop_scores['Sl' + teamn])
-            teams[teamn]['SlEndgame Median'] = st.median(endgame_scores['Sl' + teamn])
-
-        else:
-            teams[teamn]['SlMedian'] = 'NA'
-            teams[teamn]['SlAuto Median'] = 'NA'
-            teams[teamn]['SlTeleop Median'] = 'NA'
-            teams[teamn]['SlEndgame Median'] = 'NA'
+        teams[teamn]['SlMedian'] = 'NA'
+        teams[teamn]['SlAuto Median'] = 'NA'
+        teams[teamn]['SlTeleop Median'] = 'NA'
+        teams[teamn]['SlEndgame Median'] = 'NA'
 
 
 def full_standard_dev(teams, team_scores, auto_scores, teleop_scores, endgame_scores):
@@ -77,27 +64,7 @@ def full_standard_dev(teams, team_scores, auto_scores, teleop_scores, endgame_sc
             teams[teamn]['Teleop StdDev.'] = st.stdev(teleop_scores[teamn])
             teams[teamn]['Endgame StdDev.'] = st.stdev(endgame_scores[teamn])
 
-            if len(team_scores['Gl' + teamn]) <= 1:
-                teams[teamn]['GlStdDev.'] = 'NA'
-                teams[teamn]['GlAuto StdDev.'] = 'NA'
-                teams[teamn]['GlTeleop StdDev.'] = 'NA'
-                teams[teamn]['GlEndgame StdDev.'] = 'NA'
-            else:
-                teams[teamn]['GlStdDev.'] = st.stdev(team_scores['Gl' + teamn])
-                teams[teamn]['GlAuto StdDev.'] = st.stdev(auto_scores['Gl' + teamn])
-                teams[teamn]['GlTeleop StdDev.'] = st.stdev(teleop_scores['Gl' + teamn])
-                teams[teamn]['GlEndgame StdDev.'] = st.stdev(endgame_scores['Gl' + teamn])
 
-            if len(team_scores['Sl' + teamn]) <= 1:
-                teams[teamn]['SlStdDev.'] = 'NA'
-                teams[teamn]['SlAuto StdDev.'] = 'NA'
-                teams[teamn]['SlTeleop StdDev.'] = 'NA'
-                teams[teamn]['SlEndgame StdDev.'] = 'NA'
-            else:
-                teams[teamn]['SlStdDev.'] = st.stdev(team_scores['Sl' + teamn])
-                teams[teamn]['SlAuto StdDev.'] = st.stdev(auto_scores['Sl' + teamn])
-                teams[teamn]['SlTeleop StdDev.'] = st.stdev(teleop_scores['Sl' + teamn])
-                teams[teamn]['SlEndgame StdDev.'] = st.stdev(endgame_scores['Sl' + teamn])
         else:
             teams[teamn]['StdDev.'] = 'NA'
             teams[teamn]['Auto StdDev.'] = 'NA'
@@ -336,48 +303,19 @@ def average(teams, team_scores, auto_scores):
         teams[teamn]['Avg.'] = st.mean(team_scores[teamn])
         teams[teamn]['Auto Avg.'] = st.mean(auto_scores[teamn])
 
-        if len(team_scores['Gl' + teamn]) <= 0:
-            teams[teamn]['GlAvg.'] = 'NA'
-            teams[teamn]['GlAuto Avg.'] = 'NA'
-
-        else:
-            teams[teamn]['GlAvg.'] = st.mean(team_scores['Gl' + teamn])
-            teams[teamn]['GlAuto Avg.'] = st.mean(auto_scores['Gl' + teamn])
-
-        if len(team_scores['Sl' + teamn]) <= 0:
-            teams[teamn]['SlAvg.'] = 'NA'
-            teams[teamn]['SlAuto Avg.'] = 'NA'
-
-        else:
-            teams[teamn]['SlAvg.'] = st.mean(team_scores['Sl' + teamn])
-            teams[teamn]['SlAuto Avg.'] = st.mean(auto_scores['Sl' + teamn])
 
 
 def median(teams, team_scores):
     for teamn in teams:
         teams[teamn]['Median'] = st.median(team_scores[teamn])
-        if len(team_scores['Gl' + teamn]) > 0:
-            teams[teamn]['GlMedian'] = st.median(team_scores['Gl' + teamn])
-        else:
-            teams[teamn]['GlMedian'] = 'NA'
-        if len(team_scores['Sl' + teamn]) > 0:
-            teams[teamn]['SlMedian'] = st.median(team_scores['Sl' + teamn])
-        else:
-            teams[teamn]['SlMedian'] = 'NA'
+
 
 
 def standard_dev(teams, team_scores):
     for teamn in teams:
         if len(team_scores[teamn]) > 1:
             teams[teamn]['StdDev.'] = st.stdev(team_scores[teamn])
-            if len(team_scores['Gl' + teamn]) > 1:
-                teams[teamn]['GlStdDev.'] = st.stdev(team_scores['Gl' + teamn])
-            else:
-                teams[teamn]['GlStdDev.'] = 'NA'
-            if len(team_scores['Sl' + teamn]) > 1:
-                teams[teamn]['SlStdDev.'] = st.stdev(team_scores['Sl' + teamn])
-            else:
-                teams[teamn]['SlStdDev.'] = 'NA'
+
         else:
             teams[teamn]['StdDev.'] = 'NA'
             teams[teamn]['Gl' + teamn] = 'NA'
@@ -430,8 +368,10 @@ def dpr(matches, teams):
                             ag_scores.append(int(score))
                 except KeyError:
                     nonmatch += 1
-
-        teams[teamn]['DPR'] = st.mean(ag_scores)
+        try:
+            teams[teamn]['DPR'] = st.mean(ag_scores)
+        except st.StatisticsError:
+            teams[teamn]['DPR'] = 500
 
 
 '''
@@ -508,21 +448,25 @@ def scout(teams, cwdpit, pit):
 
             row_dict = dict(row)
 
-            scoutn = row_dict['Team #']
-            crater = row_dict['Full Auto Crater']
-            depot = row_dict['Full Auto Depot']
+            scoutn = row_dict['Team Number']
+            team_name = row_dict['Team Name']
+            auto = row_dict['Full Auto']
             breakable = row_dict['Breakable']
-            side = row_dict['Preferred Side']
+            side = row_dict['Side']
+            particles = row_dict['Particles']
+            pref_color = row_dict['Preferred Color']
             for teamn in teams:
                 try:
-                    r = teams[teamn]['FullCrater']
+                    r = teams[teamn]['Full Auto']
                 except KeyError:
 
                     if teams[teamn]['Team #'] == scoutn:
-                        teams[teamn]['FullCrater'] = crater
-                        teams[teamn]['FullDepot'] = depot
+                        teams[teamn]['Full Auto'] = auto
                         teams[teamn]['Breakable'] = breakable
-                        teams[teamn]['Preferred Side']  = side
+                        teams[teamn]['Pr. Side'] = side
+                        teams[teamn]['Pr. Color'] = pref_color
+                        teams[teamn]['Particles'] = particles
+                        teams[teamn]['Name'] = team_name
                         break
 
 # checks if they've been on silver or gold more
@@ -611,48 +555,60 @@ def pics(teams, ploc):  # turns a teams pictures into an excel hyperlinks
             print('File not found')
 
 
-def create_file(teams, cwd, csv2, default_d, default_gl, default_sl, metric, colormetric):
-    if colormetric:
-        gl = sorted(teams, key=lambda x: (teams[x]['Gl'+metric]), reverse=True)
-        sl = sorted(teams, key=lambda x: (teams[x]['Sl'+metric]), reverse=True)
+def create_file(teams, cwd, csv2, default_d, default_cr, default_de, metric, sidemetric):
+    if sidemetric:
+        cr_teams = dict()
+        de_teams = dict()
+        for teamn in teams:
+            try:
+                if teams[teamn]['Pr. Side'] == 'Crater' or teams[teamn]['Pr. Side'] == 'Both':
+                    cr_teams[teamn] = dict()
+                    cr_teams[teamn] = teams[teamn]
+                if teams[teamn]['Pr. Side'] == 'Depot' or teams[teamn]['Pr. Side'] == 'Both':
+                    de_teams[teamn] = dict()
+                    de_teams[teamn] = teams[teamn]
+            except KeyError:
+                i = 1
+        cr = sorted(cr_teams, key=lambda x: (teams[x][metric]), reverse=True)
+        de = sorted(de_teams, key=lambda x: (teams[x][metric]), reverse=True)
     else:
         y = sorted(teams, key=lambda x: (teams[x][metric]), reverse=True)
     print('ordering below')
     os.chdir(cwd)
     c = 1
-    del default_gl['Picture']
-    del default_sl['Picture']
+    del default_cr['Picture']
+    del default_de['Picture']
     del default_d['Picture']
     if os.path.exists(csv2):  # deletes the rankings file if it exists
         os.remove(csv2)
     with open(csv2, 'w+', newline='') as f:  # creates a new file
         # checks to see if a metric can be sorted by side color
-        if colormetric:
+        if sidemetric:
             # Gold Side
-            w = csv.DictWriter(f, default_gl.keys(), extrasaction='ignore')  # i
+            w = csv.DictWriter(f, default_cr.keys(), extrasaction='ignore')  # i
 
             w.writeheader()
-            while (c < len(gl)) and (c < 17):
-                if teams[gl[c - 1]]['Picture'] == 'NA':
+            while (c < len(cr)) and (c < 17):
+                if teams[cr[c - 1]]['Picture'] == 'NA':
                     non = 'done'
                 else:
-                    teams[gl[c - 1]]['Team #'] = teams[gl[c - 1]]['Picture']
+                    teams[cr[c - 1]]['Team #'] = teams[cr[c - 1]]['Picture']
 
-                print(teams[gl[c - 1]])
-                w.writerow(teams[gl[c - 1]])
+                print(teams[cr[c - 1]])
+                w.writerow(teams[cr[c - 1]])
                 c += 1
             c = 1
             # Silver Side
 
-            w = csv.DictWriter(f, default_sl.keys(), extrasaction='ignore')  # i
+            w = csv.DictWriter(f, default_de.keys(), extrasaction='ignore')  # i
             w.writeheader()
-            while (c < len(sl)) and (c < 17):
-                if teams[sl[c - 1]]['Picture'] == 'NA':
+            while (c < len(de)) and (c < 17):
+                if teams[de[c - 1]]['Picture'] == 'NA':
                     non = 'done'
                 else:
-                    teams[sl[c - 1]]['Team #'] = teams[sl[c - 1]]['Picture']
-                print(teams[sl[c - 1]])
-                w.writerow(teams[sl[c - 1]])
+                    teams[de[c - 1]]['Team #'] = teams[de[c - 1]]['Picture']
+                print(teams[de[c - 1]])
+                w.writerow(teams[de[c - 1]])
                 c += 1
         else:
             w = csv.DictWriter(f, default_d.keys())  # i
@@ -684,17 +640,18 @@ def main():
     print(cwd)
 
     cwda = "CSV"  # a location of the csv's you want.
-    csva = "/CSV/SampleDatav2.csv"  # the csv's in question
+    csva = "/CSV/RoverRuckus.csv"  # the csv's in question
     refcsv1 = "/CSV/ReferenceList1.csv"  # csv with some team names
     cwd2 = "CSV"  # the folder of the rankings csv
     csv2 = "CSV/Rankings.csv"  # The file that you want to place the rankings in.
     cwdpit = 'CSV'  # the pit scout location
-    pit = 'CSV/Pit_Scouting.csv'  # pit scout csv
+    pit = 'CSV/StateScoutSample.csv'  # pit scout csv
     pics1 = '/TeamPics/'  # the location of the teams pictures
     avg_full = False  # determines if the "full" function is called or not
     std_full = False
     median_full = False
-    medstd_full = True
+    medstd_full = False
+    sidemetric = True
     teams = dict()  # The rows of the output csv
     team_scores = dict()  # the scores of each team
     auto_scores = dict()
@@ -730,80 +687,56 @@ def main():
                  'FullDepot': 'no',
                  'Avg.': 0,
                  'Auto Avg.': 0,
-                 'GlAvg.': 0,
-                 'GlAuto Avg.': 0,
-                 'SlAvg.': 0,
-                 'SlAuto Avg.': 0,
                  'CCWM': 0,
                  'DPR': 0,
                  'Median': 0,
                  'StdDev.': 0,
                  'Med-Std.': 0,
                  'Med+Std.': 0,
-                 'GlMedian': 0,
-                 'GlMed-Std.': 0,
-                 'GlMed+Std.': 0,
-                 'GlStdDev.': 0,
-                 'SlMedian': 0,
-                 'SlMed-Std.': 0,
-                 'SlMed+Std.': 0,
-                 'SlStdDev.': 0,
                  'Disconnects': 0,
-                 'Preferred Side': 'None',
+                 'Pr. Side': 'None',
                  'Picture': ''
                  }
-    default_gl = {'Team #': 0,   # A Default team, updated with keys, used as the
+    default_cr = {'Team #': 0,   # A Default team, updated with keys, used as the
                   'Name': 'NA',  # index for all of the keys a team would have
                   'DQ': 0,
-                  # 'Best Score': 0,
-                  # 'Worst Score': 0,
-                  # 'NumOfScores': 0,
-                  # 'Avg.': 0,
-                  # 'Auto Avg.': 0,
+                  'Best Score': 0,
+                  'Worst Score': 0,
+                  'NumOfScores': 0,
+                  'Avg.': 0,
+                  'Auto Avg.': 0,
                   'Breakable': 'No',
                   'FullCrater': 'no',
                   'FullDepot': 'no',
-                  'GlMedian': 0,
-                  'GlMed-Std.': 0,
-                  'GlMed+Std.': 0,
-                  'GlStdDev.': 0,
-                  'GlAvg.': 0,
-                  'GlAuto Avg.': 0,
-                  # 'CCWM': 0,
-                  # 'DPR': 0,
+                  'CCWM': 0,
+                  'DPR': 0,
                   'Median': 0,
                   'StdDev.': 0,
                   'Med-Std.': 0,
                   'Med+Std.': 0,
                   'Disconnects': 0,
-                  'Preferred Side': 'None',
+                  'Pr. Side': 'None',
+                  'Pr. Color': 'None',
                   'Picture': ''
                   }
-    default_sl = {'Team #': 0,   # A Default team, updated with keys, used as the
+    default_de = {'Team #': 0,   # A Default team, updated with keys, used as the
                   'Name': 'NA',  # index for all of the keys a team would have
                   'DQ': 0,
-                  # 'Best Score': 0,
-                  # 'Worst Score': 0,
-                  # 'NumOfScores': 0,
-                  # 'Avg.': 0,
-                  # 'Auto Avg.': 0,
+                  'Best Score': 0,
+                  'Worst Score': 0,
+                  'NumOfScores': 0,
+                  'Avg.': 0,
+                  'Auto Avg.': 0,
                   'Breakable': 'no',
-                  'FullCrater': 'no',
-                  'FullDepot': 'no',
-                  'SlMedian': 0,
-                  'SlMed-Std.': 0,
-                  'SlMed+Std.': 0,
-                  'SlStdDev.': 0,
-                  'SlAvg.': 0,
-                  'SlAuto Avg.': 0,
-                  # 'CCWM': 0,
-                  # 'DPR': 0,
+                  'Full Auto': 'no',
                   'Median': 0,
                   'StdDev.': 0,
                   'Med-Std.': 0,
-                  'Med+Std.': 0,
+                  'CCWM': 0,
+                  'DPR': 0,
                   'Disconnects': 0,
-                  'Preferred Side': 'None',
+                  'Pr. Side': 'None',
+                  'Pr. Color': 'None',
                   'Picture': ''
                   }
 
@@ -824,11 +757,9 @@ def main():
     #  get_name(teams, years)  Tabled Temporarily
     pics(teams, pics1)
     # creates the file
-    if (metric == 'Median') or (metric == 'StdDev.'):
-        colormetric = True
-    else:
-        colormetric = False
-    create_file(teams, cwd, csv2, default_d, default_gl, default_sl, metric, colormetric)
+
+
+    create_file(teams, cwd, csv2, default_d, default_cr, default_de, metric, sidemetric)
 
 
 if __name__ == '__main__':

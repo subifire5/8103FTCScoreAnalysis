@@ -141,16 +141,7 @@ def csv_sheet(refcsv, cwd, csv_location, allteam):
                 # CHANGE GOLD AND SIDE AS NEEDED
                 # THIS IS THE FIRST PLACE WHERE PLACEHOLDERS HAVE BEEN PLACED
                 # ASSUMES SILVER IF SIDE ISN'T 'gold'
-                if row_dict['side'] == 'gold':
-                    team_scores['Gl' + temp_teamn].append(temp_scores[0])
-                    auto_scores['Gl' + temp_teamn].append(temp_scores[1])
-                    teleop_scores['Gl' + temp_teamn].append(temp_scores[2])
-                    endgame_scores['Gl' + temp_teamn].append(temp_scores[3])
-                else:
-                    team_scores['Sl' + temp_teamn].append(temp_scores[0])
-                    auto_scores['Sl' + temp_teamn].append(temp_scores[1])
-                    teleop_scores['Sl' + temp_teamn].append(temp_scores[2])
-                    endgame_scores['Sl' + temp_teamn].append(temp_scores[3])
+
 
                 team_scores[temp_teamn].append(temp_scores[0])
                 auto_scores[temp_teamn].append(temp_scores[1])
@@ -163,33 +154,14 @@ def csv_sheet(refcsv, cwd, csv_location, allteam):
                 teams[temp_teamn]['NumOfScores'] += 1
                 if 'Name' not in teams[temp_teamn] and 'name' in row_dict:
                     teams[temp_teamn]['Name'] = row['name']
-                if row_dict['disconnected'] == 'part.':
-                    teams[temp_teamn]['Disconnects'] += 1
-                elif row_dict['disconnected'] == 'full':
-                    teams[temp_teamn]['Disconnects'] += 1
+
 
             # makes a new team
             else:
                 # THIS IS THE SECOND POINT WHERE GOLD AND SIDE MAY VARY!!
-                team_scores['Gl' + temp_teamn] = []
-                auto_scores['Gl' + temp_teamn] = []
-                teleop_scores['Gl' + temp_teamn] = []
-                endgame_scores['Gl' + temp_teamn] = []
-                team_scores['Sl' + temp_teamn] = []
-                auto_scores['Sl' + temp_teamn] = []
-                teleop_scores['Sl' + temp_teamn] = []
-                endgame_scores['Sl' + temp_teamn] = []
 
-                if row_dict['side'] == 'gold':
-                    team_scores['Gl' + temp_teamn].append(temp_scores[0])
-                    auto_scores['Gl' + temp_teamn].append(temp_scores[1])
-                    teleop_scores['Gl' + temp_teamn].append(temp_scores[2])
-                    endgame_scores['Gl' + temp_teamn].append(temp_scores[3])
-                else:
-                    team_scores['Sl' + temp_teamn].append(temp_scores[0])
-                    auto_scores['Sl' + temp_teamn].append(temp_scores[1])
-                    teleop_scores['Sl' + temp_teamn].append(temp_scores[2])
-                    endgame_scores['Sl' + temp_teamn].append(temp_scores[3])
+
+
                 team_scores[temp_teamn] = [temp_scores[0]]
                 auto_scores[temp_teamn] = [temp_scores[1]]
                 teleop_scores[temp_teamn] = [temp_scores[2]]
@@ -202,10 +174,7 @@ def csv_sheet(refcsv, cwd, csv_location, allteam):
                                      'NumOfScores': 1,
                                      'Missed Hangs': 0
                                      }
-                if row_dict['disconnected'] == 'part.':
-                    teams[temp_teamn]['Disconnects'] += 0.5
-                elif row_dict['disconnected'] == 'full':
-                    teams[temp_teamn]['Disconnects'] +=1
+
 
                 if 'name' in row_dict:
                     teams[temp_teamn]['Name'] = row['name']
